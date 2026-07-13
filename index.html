@@ -309,9 +309,8 @@ async function send(type) {
   msg.innerText = type + " 처리중...";
 
   try {
-    await fetch(API_URL, {
+    const response = await fetch(API_URL, {
       method: "POST",
-      mode: "no-cors",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
@@ -328,13 +327,22 @@ async function send(type) {
       })
     });
 
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || type + " 처리에 실패했습니다.");
+    }
+
     localStorage.setItem(ACTION_KEY, type);
     localStorage.setItem(DATE_KEY, todayKey());
 
-    msg.innerText = type + " 완료되었습니다";
+    msg.innerText = result.message || type + " 완료되었습니다";
 
   } catch (e) {
-    msg.innerText = "오류가 발생했습니다. 다시 시도해주세요";
+    msg.innerText =
+      e && e.message
+        ? e.message
+        : "오류가 발생했습니다. 다시 시도해주세요";
   }
 
   inBtn.innerText = "출근";
