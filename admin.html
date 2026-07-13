@@ -858,41 +858,42 @@
 
 
 <script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbyJuwQdfCgVrlCu6gH6JepEXu8u4pXrWueGimopd7s5U8Jwm4XqQWSfir-mnixu1mywYg/exec";
+
   let attendanceData = [];
-  let currentKakaoText = "";
 
   document.addEventListener("DOMContentLoaded", function() {
     initializeAdmin();
   });
 
   function initializeAdmin() {
-    showLoading(true);
+    const today = getLocalDateKey(new Date());
 
-    google.script.run
-      .withSuccessHandler(function(result) {
-        const today = result && result.today
-          ? result.today
-          : getLocalDateKey(new Date());
+    document.getElementById("startDate").value = today;
+    document.getElementById("endDate").value = today;
 
-        document.getElementById("startDate").value = today;
-        document.getElementById("endDate").value = today;
-
-        if (result && result.storeName) {
-          document.getElementById("storeBadge").textContent =
-            result.storeName;
-        }
-
-        loadAttendance();
-      })
-      .withFailureHandler(function(error) {
-        showLoading(false);
-        alert("초기화 오류: " + getErrorMessage(error));
-      })
-      .getAdminInitialData();
+    loadAttendance();
   }
 
-  function loadAttendance() {
+  async function apiRequest(data) {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error("서버 응답 오류: " + response.status);
+    }
+
+    return response.json();
+  }
+
+  async function loadAttendance() {
     const filters = {
+      action: "getAdminAttendanceList",
       startDate: document.getElementById("startDate").value,
       endDate: document.getElementById("endDate").value,
       keyword: document.getElementById("keyword").value.trim(),
@@ -901,42 +902,38 @@
 
     showLoading(true);
 
-    google.script.run
-      .withSuccessHandler(function(result) {
-        showLoading(false);
+    try {
+      const result = await apiRequest(filters);
+      showLoading(false);
 
-        if (!result || result.success === false) {
-          alert(
-            result && result.message
-              ? result.message
-              : "조회에 실패했습니다."
-          );
-          return;
-        }
+      if (!result || result.success === false) {
+        alert(result && result.message ? result.message : "조회에 실패했습니다.");
+        return;
+      }
 
-        attendanceData = result.records || [];
+      attendanceData = result.records || [];
 
-        renderSummary(result.summary || {});
-        renderAttendance(attendanceData);
+      if (result.storeName) {
+        document.getElementById("storeBadge").textContent = result.storeName;
+      }
 
-        const period =
-          (result.startDate || "") +
-          " ~ " +
-          (result.endDate || "");
+      renderSummary(result.summary || {});
+      renderAttendance(attendanceData);
 
-        document.getElementById("periodText").textContent =
-          "조회기간: " + period;
+      const period = (result.startDate || "") + " ~ " + (result.endDate || "");
 
-        document.getElementById("printPeriodText").textContent =
-          "조회기간: " + period;
+      document.getElementById("periodText").textContent =
+        "조회기간: " + period;
 
-        syncStatusTabs(result.status || "전체");
-      })
-      .withFailureHandler(function(error) {
-        showLoading(false);
-        alert("조회 오류: " + getErrorMessage(error));
-      })
-      .getAdminAttendanceList(filters);
+      document.getElementById("printPeriodText").textContent =
+        "조회기간: " + period;
+
+      syncStatusTabs(result.status || "전체");
+
+    } catch (error) {
+      showLoading(false);
+      alert("조회 오류: " + getErrorMessage(error));
+    }
   }
 
   function renderSummary(summary) {
@@ -971,39 +968,28 @@
     }
 
     tbody.innerHTML = list.map(function(item) {
+      const safeName = JSON.stringify(item.name || "");
+      const safePhone = JSON.stringify(item.phone || "");
+
       return `
         <tr>
           <td>${escapeHtml(item.date || "")}</td>
-
-          <td class="name-cell">
-            ${escapeHtml(item.name || "")}
-          </td>
-
+          <td class="name-cell">${escapeHtml(item.name || "")}</td>
           <td>${escapeHtml(formatPhone(item.phone || ""))}</td>
-
           <td>${escapeHtml(item.checkIn || "-")}</td>
-
           <td>${escapeHtml(item.checkOut || "-")}</td>
-
           <td>${escapeHtml(item.workTimeText || "-")}</td>
-
           <td>${statusHtml(item.status)}</td>
-
           <td class="${distanceClass(item.checkInDistance)}">
             ${escapeHtml(formatDistance(item.checkInDistance))}
           </td>
-
           <td class="${distanceClass(item.checkOutDistance)}">
             ${escapeHtml(formatDistance(item.checkOutDistance))}
           </td>
-
           <td class="no-print">
             <button
               class="btn btn-light btn-small"
-              onclick='openEmployeeDetail(
-                ${JSON.stringify(item.name || "")},
-                ${JSON.stringify(item.phone || "")}
-              )'
+              onclick='openEmployeeDetail(${safeName}, ${safePhone})'
             >
               상세
             </button>
@@ -1013,8 +999,9 @@
     }).join("");
   }
 
-  function openEmployeeDetail(name, phone) {
+  async function openEmployeeDetail(name, phone) {
     const data = {
+      action: "getEmployeeAttendanceDetail",
       name: name,
       phone: phone,
       startDate: document.getElementById("startDate").value,
@@ -1023,27 +1010,26 @@
 
     showLoading(true);
 
-    google.script.run
-      .withSuccessHandler(function(result) {
-        showLoading(false);
+    try {
+      const result = await apiRequest(data);
+      showLoading(false);
 
-        if (!result || result.success === false) {
-          alert(
-            result && result.message
-              ? result.message
-              : "직원 상세조회에 실패했습니다."
-          );
-          return;
-        }
+      if (!result || result.success === false) {
+        alert(
+          result && result.message
+            ? result.message
+            : "직원 상세조회에 실패했습니다."
+        );
+        return;
+      }
 
-        renderEmployeeDetail(result);
-        document.getElementById("detailModal").classList.add("show");
-      })
-      .withFailureHandler(function(error) {
-        showLoading(false);
-        alert("상세조회 오류: " + getErrorMessage(error));
-      })
-      .getEmployeeAttendanceDetail(data);
+      renderEmployeeDetail(result);
+      document.getElementById("detailModal").classList.add("show");
+
+    } catch (error) {
+      showLoading(false);
+      alert("상세조회 오류: " + getErrorMessage(error));
+    }
   }
 
   function renderEmployeeDetail(result) {
@@ -1053,8 +1039,7 @@
     const records = result.records || [];
 
     document.getElementById("detailTitle").textContent =
-      (employee.name || "직원") +
-      " 출퇴근 상세";
+      (employee.name || "직원") + " 출퇴근 상세";
 
     document.getElementById("detailPeriod").textContent =
       "조회기간: " +
@@ -1106,8 +1091,8 @@
       }).join("");
     }
 
-    currentKakaoText = result.kakaoText || "";
-    document.getElementById("kakaoText").value = currentKakaoText;
+    document.getElementById("kakaoText").value =
+      result.kakaoText || "";
   }
 
   function closeDetailModal() {
@@ -1121,7 +1106,8 @@
   }
 
   function copyKakaoText() {
-    const text = document.getElementById("kakaoText").value;
+    const textarea = document.getElementById("kakaoText");
+    const text = textarea.value;
 
     if (!text) {
       alert("복사할 내용이 없습니다.");
@@ -1134,14 +1120,14 @@
           alert("카카오톡용 내용이 복사되었습니다.");
         })
         .catch(function() {
-          fallbackCopy(text);
+          fallbackCopy();
         });
     } else {
-      fallbackCopy(text);
+      fallbackCopy();
     }
   }
 
-  function fallbackCopy(text) {
+  function fallbackCopy() {
     const textarea = document.getElementById("kakaoText");
     textarea.focus();
     textarea.select();
@@ -1160,19 +1146,17 @@
       return;
     }
 
-    const rows = [
-      [
-        "날짜",
-        "직원명",
-        "전화번호",
-        "출근시간",
-        "퇴근시간",
-        "근무시간",
-        "상태",
-        "출근거리",
-        "퇴근거리"
-      ]
-    ];
+    const rows = [[
+      "날짜",
+      "직원명",
+      "전화번호",
+      "출근시간",
+      "퇴근시간",
+      "근무시간",
+      "상태",
+      "출근거리",
+      "퇴근거리"
+    ]];
 
     attendanceData.forEach(function(item) {
       rows.push([
@@ -1200,11 +1184,8 @@
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
 
-    const startDate =
-      document.getElementById("startDate").value || "";
-
-    const endDate =
-      document.getElementById("endDate").value || "";
+    const startDate = document.getElementById("startDate").value || "";
+    const endDate = document.getElementById("endDate").value || "";
 
     anchor.href = url;
     anchor.download =
@@ -1223,47 +1204,37 @@
 
   function selectStatusTab(button) {
     const status = button.dataset.status || "전체";
-
     document.getElementById("statusFilter").value = status;
 
-    document.querySelectorAll(".filter-tab")
-      .forEach(function(tab) {
-        tab.classList.toggle(
-          "active",
-          tab.dataset.status === status
-        );
-      });
+    document.querySelectorAll(".filter-tab").forEach(function(tab) {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.status === status
+      );
+    });
 
     loadAttendance();
   }
 
   function syncStatusTabs(status) {
-    document.querySelectorAll(".filter-tab")
-      .forEach(function(tab) {
-        tab.classList.toggle(
-          "active",
-          tab.dataset.status === status
-        );
-      });
+    document.querySelectorAll(".filter-tab").forEach(function(tab) {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.status === status
+      );
+    });
   }
 
   function setToday() {
     const today = getLocalDateKey(new Date());
-
     document.getElementById("startDate").value = today;
     document.getElementById("endDate").value = today;
-
     loadAttendance();
   }
 
   function setThisMonth() {
     const now = new Date();
-
-    const firstDay = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      1
-    );
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
 
     document.getElementById("startDate").value =
       getLocalDateKey(firstDay);
@@ -1281,13 +1252,11 @@
   }
 
   function statusHtml(status) {
-    const value = status || "";
-
-    if (value === "근무중") {
+    if (status === "근무중") {
       return `<span class="status status-working">근무중</span>`;
     }
 
-    if (value === "퇴근완료") {
+    if (status === "퇴근완료") {
       return `<span class="status status-completed">퇴근완료</span>`;
     }
 
@@ -1296,7 +1265,6 @@
 
   function distanceClass(value) {
     const number = parseFloat(value);
-
     if (isNaN(number)) return "";
 
     return number <= 100
