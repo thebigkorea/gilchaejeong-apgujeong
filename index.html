@@ -298,8 +298,13 @@ async function send(type) {
 
   msg.innerText = "위치 확인중...";
 
-  if (type === "출근") inBtn.innerText = "출근 처리중...";
-  if (type === "퇴근") outBtn.innerText = "퇴근 처리중...";
+  if (type === "출근") {
+    inBtn.innerText = "출근 처리중...";
+  }
+
+  if (type === "퇴근") {
+    outBtn.innerText = "퇴근 처리중...";
+  }
 
   inBtn.disabled = true;
   outBtn.disabled = true;
@@ -329,26 +334,48 @@ async function send(type) {
 
     const result = await response.json();
 
-    if (!result.success) {
-      throw new Error(result.message || type + " 처리에 실패했습니다.");
+    if (!result || result.success !== true) {
+      throw new Error(
+        result && result.message
+          ? result.message
+          : type + " 처리에 실패했습니다."
+      );
     }
 
     localStorage.setItem(ACTION_KEY, type);
     localStorage.setItem(DATE_KEY, todayKey());
 
-    msg.innerText = result.message || type + " 완료되었습니다";
+    inBtn.innerText = "출근";
+    outBtn.innerText = "퇴근";
+
+    updateBtn();
+
+    msg.innerText =
+      result.message || type + " 완료되었습니다";
 
   } catch (e) {
+    inBtn.innerText = "출근";
+    outBtn.innerText = "퇴근";
+
+    // 기존 상태에 맞게 버튼만 복구
+    const last = localStorage.getItem(ACTION_KEY);
+
+    if (last === "출근") {
+      inBtn.disabled = true;
+      outBtn.disabled = false;
+    } else if (last === "퇴근") {
+      inBtn.disabled = true;
+      outBtn.disabled = true;
+    } else {
+      inBtn.disabled = false;
+      outBtn.disabled = true;
+    }
+
     msg.innerText =
       e && e.message
-        ? e.message
+        ? "처리 실패: " + e.message
         : "오류가 발생했습니다. 다시 시도해주세요";
   }
-
-  inBtn.innerText = "출근";
-  outBtn.innerText = "퇴근";
-
-  updateBtn();
 }
 
 function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
