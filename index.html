@@ -405,7 +405,55 @@ function showMain(u){document.getElementById("register").style.display="none";do
 window.onload=()=>{resetDailyIfNeeded();document.getElementById("phone").oninput=function(){this.value=formatPhone(this.value)};const s=localStorage.getItem(KEY);if(s)showMain(JSON.parse(s))}
 async function register(){const name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),m=document.getElementById("regMsg");m.style.display="block";if(!name||!phone){m.textContent="이름과 전화번호를 입력하세요.";return}m.textContent="직원 등록 중...";try{await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"register",name,phone,userAgent:navigator.userAgent})});const u={name,phone:phone.replace(/\D/g,"")};localStorage.setItem(KEY,JSON.stringify(u));showMain(u)}catch(e){m.textContent="직원 등록 중 오류가 발생했습니다."}}
 function getLocation(){return new Promise(r=>{if(!navigator.geolocation)return r({latitude:"",longitude:"",distance:""});navigator.geolocation.getCurrentPosition(p=>{const lat=p.coords.latitude,lng=p.coords.longitude;r({latitude:lat,longitude:lng,distance:Math.round(calculateDistanceMeters(lat,lng,STORE_LAT,STORE_LNG))+"m"})},()=>r({latitude:"",longitude:"",distance:"위치권한없음"}),{enableHighAccuracy:false,timeout:5000,maximumAge:60000})})}
-async function send(type){const u=JSON.parse(localStorage.getItem(KEY)||"null");if(!u)return setStatus("직원 정보를 다시 등록해주세요.","error");const i=document.getElementById("inBtn"),o=document.getElementById("outBtn"),t=nowHHMM();localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,t);document.getElementById(type==="출근"?"inTime":"outTime").textContent=t;(type==="출근"?i:o).textContent=type+" 저장중...";i.disabled=o.disabled=true;setStatus(type+" "+t+" · 저장 중...");const loc=await getLocation();try{const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:u.name,phone:u.phone,type,store:"압구정 길채정",timestamp:new Date().toISOString(),latitude:loc.latitude,longitude:loc.longitude,distance:loc.distance,userAgent:navigator.userAgent})});const result=await res.json();if(!result||result.success!==true)throw new Error();let st=t,m=String(result.time||"").match(/(\d{2}):(\d{2})/);if(m)st=m[1]+":"+m[2];localStorage.setItem(ACTION_KEY,type);localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,st);localStorage.setItem(DATE_KEY,todayKey());updateBtn()}catch(e){localStorage.removeItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY);updateBtn();setStatus("저장 실패 · 다시 눌러주세요.","error")}}
+async function send(type){
+  const u=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(!u) return setStatus("직원 정보를 다시 등록해주세요.","error");
+
+  const i=document.getElementById("inBtn");
+  const o=document.getElementById("outBtn");
+  const t=nowHHMM();
+
+  // 1) 직원에게는 즉시 완료로 표시
+  localStorage.setItem(ACTION_KEY,type);
+  localStorage.setItem(DATE_KEY,todayKey());
+  localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,t);
+  updateBtn();
+
+  // 2) 위치 확인과 서버 저장은 뒤에서 처리
+  try{
+    const loc=await getLocation();
+    const res=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({
+        name:u.name,
+        phone:u.phone,
+        type,
+        store:"압구정 길채정",
+        timestamp:new Date().toISOString(),
+        latitude:loc.latitude,
+        longitude:loc.longitude,
+        distance:loc.distance,
+        userAgent:navigator.userAgent
+      })
+    });
+
+    const result=await res.json();
+    if(!result || result.success!==true) throw new Error("server");
+
+    // 서버가 반환한 실제 저장 시간이 있으면 시간만 보정
+    const m=String(result.time||"").match(/(\d{2}):(\d{2})/);
+    if(m){
+      const st=m[1]+":"+m[2];
+      localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,st);
+      document.getElementById(type==="출근"?"inTime":"outTime").textContent=st;
+      setStatus("✓ "+st+" "+type+" 완료","ok");
+    }
+  }catch(e){
+    // 화면은 완료 상태를 유지하되 서버 저장 실패만 명확히 알림
+    setStatus("⚠ "+type+" 시간은 표시됐지만 서버 저장을 확인하지 못했습니다. 다시 확인해주세요.","error");
+  }
+}
 function calculateDistanceMeters(a,b,c,d){const R=6371000,x=toRad(c-a),y=toRad(d-b),z=Math.sin(x/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(z),Math.sqrt(1-z))}
 function toRad(v){return v*Math.PI/180}
 function reset(){if(!confirm("직원 정보를 다시 등록하시겠습니까?"))return;[KEY,ACTION_KEY,DATE_KEY,IN_TIME_KEY,OUT_TIME_KEY].forEach(k=>localStorage.removeItem(k));location.reload()}
