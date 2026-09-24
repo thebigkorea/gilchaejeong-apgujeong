@@ -1,414 +1,412 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>압구정 길채정 출퇴근</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
-  background: #f8f5ef;
-}
-
-.container {
-  max-width: 480px;
-  margin: auto;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  border-radius: 24px;
-  padding: 26px;
-  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
-}
-
-.title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 900;
-}
-
-.sub {
-  text-align: center;
-  color: #777;
-  margin-bottom: 28px;
-  font-size: 20px;
-}
-
-input {
-  width: 100%;
-  height: 64px;
-  margin-top: 12px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
-  padding-left: 18px;
-  font-size: 22px;
-}
-
-button {
-  width: 100%;
-  height: 72px;
-  border: none;
-  border-radius: 18px;
-  margin-top: 18px;
-  font-size: 26px;
-  font-weight: 900;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
-  box-shadow: 0 8px 0 rgba(0,0,0,0.16);
-  cursor: pointer;
-}
-
-button:active {
-  transform: translateY(5px) scale(0.98);
-  box-shadow: 0 3px 0 rgba(0,0,0,0.18);
-  opacity: 0.85;
-}
-
-button:disabled {
-  opacity: 0.35;
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-main { background: #4a2d18; color: white; }
-.btn-in { background: #1e8e3e; color: white; }
-.btn-out { background: #d93025; color: white; }
-
-.btn-reset {
-  background: #eee2d4;
-  color: #4a2d18;
-  height: 52px;
-  font-size: 17px;
-  border-radius: 14px;
-  margin-top: 24px;
-  box-shadow: none;
-  opacity: 0.8;
-}
-
-.btn-reset:active {
-  transform: translateY(2px) scale(0.99);
-  opacity: 0.65;
-}
-
-.status {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: 900;
-  color: #4a2d18;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <div id="register" class="card">
-    <div class="title">길채정</div>
-    <div class="sub">압구정점 직원등록</div>
-
-    <input id="name" placeholder="이름">
-    <input id="phone" placeholder="전화번호">
-
-    <button class="btn-main" onclick="register()">등록하기</button>
-    <div id="regMsg" class="status"></div>
-  </div>
-
-  <div id="main" class="card" style="display:none;">
-    <div class="title">출퇴근</div>
-    <div id="userName" class="sub"></div>
-
-    <button id="inBtn" class="btn-in" onclick="send('출근')">출근</button>
-    <button id="outBtn" class="btn-out" onclick="send('퇴근')">퇴근</button>
-
-    <button class="btn-reset" onclick="reset()">직원 정보 다시 등록</button>
-
-    <div id="msg" class="status"></div>
-  </div>
-
-</div>
-
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;background:#f7f3eb;color:#201b18}
+.container{max-width:430px;margin:auto;padding:18px 14px}.card{background:#fff;border-radius:26px;padding:26px 22px 22px;box-shadow:0 12px 32px rgba(61,42,27,.10)}
+.brand{text-align:center;font-size:29px;font-weight:900;color:#5a3018}.store{text-align:center;color:#7d746e;font-size:14px;font-weight:800;margin-top:4px}
+.title{text-align:center;font-size:27px;font-weight:900;margin-top:24px}.greeting{text-align:center;font-size:14px;font-weight:800;color:#43524a;margin-top:8px}.clock{text-align:center;font-size:12px;color:#8d9891;margin-top:7px}
+.quote{margin-top:17px;padding:12px 14px;border:1px solid #e8dece;background:#fbfaf6;border-radius:16px;text-align:center}.quote-label{font-size:10px;font-weight:900;color:#8a633f;margin-bottom:5px}.quote-text{font-size:13px;line-height:1.45;font-weight:800;color:#3d3a36}
+.employee{margin-top:14px;padding:13px 14px;background:#faf7f1;border:1px solid #eadfce;border-radius:16px;text-align:center;font-weight:900}.employee .name{font-size:19px}.employee .phone{font-size:15px;margin-left:7px}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.time-card{background:#faf8f4;border:1px solid #ece4d9;border-radius:13px;padding:10px 12px;display:flex;justify-content:space-between}.time-card span{font-size:12px;color:#777;font-weight:800}.time-card strong{font-size:16px}
+button{width:100%;height:64px;border:0;border-radius:17px;margin-top:10px;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 7px 0 rgba(0,0,0,.14)}button:disabled{opacity:.35;box-shadow:none}.btn-main{background:#6b3b20;color:#fff}.btn-in{background:#4a9158;color:#fff}.btn-out{background:#b43a2d;color:#fff}
+.btn-reset{height:auto;background:transparent;color:#766c65;box-shadow:none;font-size:13px;text-decoration:underline;text-underline-offset:3px;margin-top:15px;padding:7px}
+.status{margin-top:11px;padding:12px 10px;border-radius:14px;background:#f3f3f3;text-align:center;font-size:14px;font-weight:800;color:#555;min-height:44px}.status.ok{background:#eef7ef;color:#28713c}.status.error{background:#fff0ef;color:#a42e25}
+.form-title{text-align:center;font-size:27px;font-weight:900;margin-top:22px}.form-desc{text-align:center;color:#777;font-size:14px;line-height:1.55;margin:8px 0 18px}label{display:block;font-size:14px;font-weight:900;margin:11px 0 6px}
+input{width:100%;height:54px;border:1px solid #ddd;border-radius:14px;padding:0 15px;font-size:18px;letter-spacing:0!important}
+</style></head><body><div class="container">
+<div id="register" class="card"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="form-title">직원 등록</div><div class="form-desc">최초 1회만 등록하면 됩니다.<br>이후에는 자동으로 출퇴근 화면이 열립니다.</div>
+<label>직원명</label><input id="name" placeholder="이름"><label>전화번호</label><input id="phone" type="tel" inputmode="numeric" maxlength="13" placeholder="010-1234-5678"><button class="btn-main" onclick="register()">직원 등록</button><div id="regMsg" class="status" style="display:none"></div></div>
+<div id="main" class="card" style="display:none"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="title">출퇴근 체크</div><div class="greeting">오늘도 좋은 하루 되세요.</div><div id="clock" class="clock"></div>
+<div class="quote"><div class="quote-label">오늘의 한마디</div><div id="quoteText" class="quote-text"></div></div>
+<div class="employee"><span id="userName" class="name"></span><span id="userPhone" class="phone"></span></div>
+<div class="times"><div class="time-card"><span>출근</span><strong id="inTime">--:--</strong></div><div class="time-card"><span>퇴근</span><strong id="outTime">--:--</strong></div></div>
+<button id="inBtn" class="btn-in" onclick="send('출근')">출근</button><button id="outBtn" class="btn-out" onclick="send('퇴근')">퇴근</button><button class="btn-reset" onclick="reset()">직원정보 변경</button><div id="msg" class="status">아직 출근 전입니다.</div></div></div>
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyJuwQdfCgVrlCu6gH6JepEXu8u4pXrWueGimopd7s5U8Jwm4XqQWSfir-mnixu1mywYg/exec";
-
-const KEY = "GILCHAEJEONG_APGUJEONG_USER";
-const ACTION_KEY = "GILCHAEJEONG_APGUJEONG_ACTION";
-const DATE_KEY = "GILCHAEJEONG_APGUJEONG_ACTION_DATE";
-
-const STORE_LAT = 37.5274;
-const STORE_LNG = 127.0400;
-
-window.onload = () => {
-  resetDailyIfNeeded();
-
-  const saved = JSON.parse(localStorage.getItem(KEY));
-  if (saved) {
-    showMain(saved);
-  }
-};
-
-function todayKey() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function resetDailyIfNeeded() {
-  const savedDate = localStorage.getItem(DATE_KEY);
-  const today = todayKey();
-
-  if (savedDate && savedDate !== today) {
-    localStorage.removeItem(ACTION_KEY);
-    localStorage.removeItem(DATE_KEY);
-  }
-}
-
-async function register() {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const regMsg = document.getElementById("regMsg");
-
-  if (!name || !phone) {
-    regMsg.innerText = "이름과 전화번호를 입력하세요";
-    return;
-  }
-
-  regMsg.innerText = "직원 등록중...";
-
-  try {
-    await fetch(API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "register",
-        name: name,
-        phone: phone,
-        userAgent: navigator.userAgent
-      })
-    });
-
-    const user = { name, phone };
-    localStorage.setItem(KEY, JSON.stringify(user));
-
-    regMsg.innerText = "직원 등록 완료";
-    showMain(user);
-
-  } catch (e) {
-    regMsg.innerText = "직원 등록 중 오류가 발생했습니다.";
-  }
-}
-
-function showMain(user) {
-  document.getElementById("register").style.display = "none";
-  document.getElementById("main").style.display = "block";
-  document.getElementById("userName").innerText = user.name + "님";
-  updateBtn();
-}
-
-function updateBtn() {
-  resetDailyIfNeeded();
-
-  const last = localStorage.getItem(ACTION_KEY);
-
-  const inBtn = document.getElementById("inBtn");
-  const outBtn = document.getElementById("outBtn");
-  const msg = document.getElementById("msg");
-
-  if (!last) {
-    inBtn.disabled = false;
-    outBtn.disabled = true;
-    msg.innerText = "";
-    return;
-  }
-
-  if (last === "출근") {
-    inBtn.disabled = true;
-    outBtn.disabled = false;
-    msg.innerText = "출근 완료 · 퇴근 가능";
-    return;
-  }
-
-  if (last === "퇴근") {
-    inBtn.disabled = true;
-    outBtn.disabled = true;
-    msg.innerText = "오늘 출퇴근 완료";
-  }
-}
-
-function getLocation() {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve({
-        latitude: "",
-        longitude: "",
-        distance: ""
-      });
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const distance = Math.round(calculateDistanceMeters(lat, lng, STORE_LAT, STORE_LNG)) + "m";
-
-        resolve({
-          latitude: lat,
-          longitude: lng,
-          distance: distance
-        });
-      },
-      () => {
-        resolve({
-          latitude: "",
-          longitude: "",
-          distance: "위치권한없음"
-        });
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 0
-      }
-    );
-  });
-}
-
-async function send(type) {
-  const user = JSON.parse(localStorage.getItem(KEY));
-  const msg = document.getElementById("msg");
-  const inBtn = document.getElementById("inBtn");
-  const outBtn = document.getElementById("outBtn");
-
-  if (!user) {
-    msg.innerText = "직원 정보를 다시 등록해주세요";
-    return;
-  }
-
-  msg.innerText = "위치 확인중...";
-
-  if (type === "출근") {
-    inBtn.innerText = "출근 처리중...";
-  }
-
-  if (type === "퇴근") {
-    outBtn.innerText = "퇴근 처리중...";
-  }
-
-  inBtn.disabled = true;
-  outBtn.disabled = true;
-
-  const location = await getLocation();
-
-  msg.innerText = type + " 처리중...";
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        name: user.name,
-        phone: user.phone,
-        type: type,
-        store: "압구정 길채정",
-        timestamp: new Date().toISOString(),
-        latitude: location.latitude,
-        longitude: location.longitude,
-        distance: location.distance,
-        userAgent: navigator.userAgent
-      })
-    });
-
-    const result = await response.json();
-
-    if (!result || result.success !== true) {
-      throw new Error(
-        result && result.message
-          ? result.message
-          : type + " 처리에 실패했습니다."
-      );
-    }
-
-    localStorage.setItem(ACTION_KEY, type);
-    localStorage.setItem(DATE_KEY, todayKey());
-
-    inBtn.innerText = "출근";
-    outBtn.innerText = "퇴근";
-
-    updateBtn();
-
-    msg.innerText =
-      result.message || type + " 완료되었습니다";
-
-  } catch (e) {
-    inBtn.innerText = "출근";
-    outBtn.innerText = "퇴근";
-
-    // 기존 상태에 맞게 버튼만 복구
-    const last = localStorage.getItem(ACTION_KEY);
-
-    if (last === "출근") {
-      inBtn.disabled = true;
-      outBtn.disabled = false;
-    } else if (last === "퇴근") {
-      inBtn.disabled = true;
-      outBtn.disabled = true;
-    } else {
-      inBtn.disabled = false;
-      outBtn.disabled = true;
-    }
-
-    msg.innerText =
-      e && e.message
-        ? "처리 실패: " + e.message
-        : "오류가 발생했습니다. 다시 시도해주세요";
-  }
-}
-
-function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
-  const R = 6371000;
-  const dLat = toRad(lat2 - lat1);
-  const dLng = toRad(lng2 - lng1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-    Math.cos(toRad(lat2)) *
-    Math.sin(dLng / 2) *
-    Math.sin(dLng / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
-}
-
-function toRad(value) {
-  return value * Math.PI / 180;
-}
-
-function reset() {
-  if (!confirm("직원 정보를 다시 등록하시겠습니까?")) return;
-
-  localStorage.removeItem(KEY);
-  localStorage.removeItem(ACTION_KEY);
-  localStorage.removeItem(DATE_KEY);
-
-  location.reload();
-}
-</script>
-
-</body>
-</html>z
+const API_URL="https://script.google.com/macros/s/AKfycbyJuwQdfCgVrlCu6gH6JepEXu8u4pXrWueGimopd7s5U8Jwm4XqQWSfir-mnixu1mywYg/exec";
+const KEY="GILCHAEJEONG_APGUJEONG_USER",ACTION_KEY="GILCHAEJEONG_APGUJEONG_ACTION",DATE_KEY="GILCHAEJEONG_APGUJEONG_ACTION_DATE",IN_TIME_KEY="GILCHAEJEONG_APGUJEONG_IN_TIME",OUT_TIME_KEY="GILCHAEJEONG_APGUJEONG_OUT_TIME";
+const STORE_LAT=37.5274,STORE_LNG=127.0400;
+const DAILY_QUOTES=["오늘도 좋은 하루의 시작이 됩니다.",
+"오늘도 신뢰를 쌓는 가장 좋은 방법입니다.",
+"오늘도 우리 모두를 편안하게 합니다.",
+"오늘도 좋은 기억을 만듭니다.",
+"오늘도 동료에게 힘이 됩니다.",
+"오늘도 손님에게 그대로 전해집니다.",
+"오늘도 더 나은 서비스를 만듭니다.",
+"오늘도 작지만 큰 차이를 만듭니다.",
+"오늘도 오늘의 만족을 만듭니다.",
+"오늘도 내일의 좋은 결과로 이어집니다.",
+"오늘도 우리 매장의 분위기를 바꿉니다.",
+"오늘도 서로의 하루를 밝게 합니다.",
+"오늘도 좋은 팀워크로 이어집니다.",
+"오늘도 일의 완성도를 높여줍니다.",
+"오늘도 기분 좋은 만남을 만듭니다.",
+"오늘도 하루를 더 가치 있게 만듭니다.",
+"오늘도 꾸준한 성장의 바탕이 됩니다.",
+"오늘도 가장 오래 남는 서비스가 됩니다.",
+"오늘도 서로에게 좋은 에너지가 됩니다.",
+"오늘도 길채정의 좋은 인상을 만듭니다.",
+"한결같은 마음으로 좋은 하루의 시작이 됩니다.",
+"한결같은 마음으로 신뢰를 쌓는 가장 좋은 방법입니다.",
+"한결같은 마음으로 우리 모두를 편안하게 합니다.",
+"한결같은 마음으로 좋은 기억을 만듭니다.",
+"한결같은 마음으로 동료에게 힘이 됩니다.",
+"한결같은 마음으로 손님에게 그대로 전해집니다.",
+"한결같은 마음으로 더 나은 서비스를 만듭니다.",
+"한결같은 마음으로 작지만 큰 차이를 만듭니다.",
+"한결같은 마음으로 오늘의 만족을 만듭니다.",
+"한결같은 마음으로 내일의 좋은 결과로 이어집니다.",
+"한결같은 마음으로 우리 매장의 분위기를 바꿉니다.",
+"한결같은 마음으로 서로의 하루를 밝게 합니다.",
+"한결같은 마음으로 좋은 팀워크로 이어집니다.",
+"한결같은 마음으로 일의 완성도를 높여줍니다.",
+"한결같은 마음으로 기분 좋은 만남을 만듭니다.",
+"한결같은 마음으로 하루를 더 가치 있게 만듭니다.",
+"한결같은 마음으로 꾸준한 성장의 바탕이 됩니다.",
+"한결같은 마음으로 가장 오래 남는 서비스가 됩니다.",
+"한결같은 마음으로 서로에게 좋은 에너지가 됩니다.",
+"한결같은 마음으로 길채정의 좋은 인상을 만듭니다.",
+"기분 좋은 하루를 위해 좋은 하루의 시작이 됩니다.",
+"기분 좋은 하루를 위해 신뢰를 쌓는 가장 좋은 방법입니다.",
+"기분 좋은 하루를 위해 우리 모두를 편안하게 합니다.",
+"기분 좋은 하루를 위해 좋은 기억을 만듭니다.",
+"기분 좋은 하루를 위해 동료에게 힘이 됩니다.",
+"기분 좋은 하루를 위해 손님에게 그대로 전해집니다.",
+"기분 좋은 하루를 위해 더 나은 서비스를 만듭니다.",
+"기분 좋은 하루를 위해 작지만 큰 차이를 만듭니다.",
+"기분 좋은 하루를 위해 오늘의 만족을 만듭니다.",
+"기분 좋은 하루를 위해 내일의 좋은 결과로 이어집니다.",
+"기분 좋은 하루를 위해 우리 매장의 분위기를 바꿉니다.",
+"기분 좋은 하루를 위해 서로의 하루를 밝게 합니다.",
+"기분 좋은 하루를 위해 좋은 팀워크로 이어집니다.",
+"기분 좋은 하루를 위해 일의 완성도를 높여줍니다.",
+"기분 좋은 하루를 위해 기분 좋은 만남을 만듭니다.",
+"기분 좋은 하루를 위해 하루를 더 가치 있게 만듭니다.",
+"기분 좋은 하루를 위해 꾸준한 성장의 바탕이 됩니다.",
+"기분 좋은 하루를 위해 가장 오래 남는 서비스가 됩니다.",
+"기분 좋은 하루를 위해 서로에게 좋은 에너지가 됩니다.",
+"기분 좋은 하루를 위해 길채정의 좋은 인상을 만듭니다.",
+"좋은 서비스는 좋은 하루의 시작이 됩니다.",
+"좋은 서비스는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"좋은 서비스는 우리 모두를 편안하게 합니다.",
+"좋은 서비스는 좋은 기억을 만듭니다.",
+"좋은 서비스는 동료에게 힘이 됩니다.",
+"좋은 서비스는 손님에게 그대로 전해집니다.",
+"좋은 서비스는 더 나은 서비스를 만듭니다.",
+"좋은 서비스는 작지만 큰 차이를 만듭니다.",
+"좋은 서비스는 오늘의 만족을 만듭니다.",
+"좋은 서비스는 내일의 좋은 결과로 이어집니다.",
+"좋은 서비스는 우리 매장의 분위기를 바꿉니다.",
+"좋은 서비스는 서로의 하루를 밝게 합니다.",
+"좋은 서비스는 좋은 팀워크로 이어집니다.",
+"좋은 서비스는 일의 완성도를 높여줍니다.",
+"좋은 서비스는 기분 좋은 만남을 만듭니다.",
+"좋은 서비스는 하루를 더 가치 있게 만듭니다.",
+"좋은 서비스는 꾸준한 성장의 바탕이 됩니다.",
+"좋은 서비스는 가장 오래 남는 서비스가 됩니다.",
+"좋은 서비스는 서로에게 좋은 에너지가 됩니다.",
+"좋은 서비스는 길채정의 좋은 인상을 만듭니다.",
+"작은 배려는 좋은 하루의 시작이 됩니다.",
+"작은 배려는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"작은 배려는 우리 모두를 편안하게 합니다.",
+"작은 배려는 좋은 기억을 만듭니다.",
+"작은 배려는 동료에게 힘이 됩니다.",
+"작은 배려는 손님에게 그대로 전해집니다.",
+"작은 배려는 더 나은 서비스를 만듭니다.",
+"작은 배려는 작지만 큰 차이를 만듭니다.",
+"작은 배려는 오늘의 만족을 만듭니다.",
+"작은 배려는 내일의 좋은 결과로 이어집니다.",
+"작은 배려는 우리 매장의 분위기를 바꿉니다.",
+"작은 배려는 서로의 하루를 밝게 합니다.",
+"작은 배려는 좋은 팀워크로 이어집니다.",
+"작은 배려는 일의 완성도를 높여줍니다.",
+"작은 배려는 기분 좋은 만남을 만듭니다.",
+"작은 배려는 하루를 더 가치 있게 만듭니다.",
+"작은 배려는 꾸준한 성장의 바탕이 됩니다.",
+"작은 배려는 가장 오래 남는 서비스가 됩니다.",
+"작은 배려는 서로에게 좋은 에너지가 됩니다.",
+"작은 배려는 길채정의 좋은 인상을 만듭니다.",
+"따뜻한 인사는 좋은 하루의 시작이 됩니다.",
+"따뜻한 인사는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"따뜻한 인사는 우리 모두를 편안하게 합니다.",
+"따뜻한 인사는 좋은 기억을 만듭니다.",
+"따뜻한 인사는 동료에게 힘이 됩니다.",
+"따뜻한 인사는 손님에게 그대로 전해집니다.",
+"따뜻한 인사는 더 나은 서비스를 만듭니다.",
+"따뜻한 인사는 작지만 큰 차이를 만듭니다.",
+"따뜻한 인사는 오늘의 만족을 만듭니다.",
+"따뜻한 인사는 내일의 좋은 결과로 이어집니다.",
+"따뜻한 인사는 우리 매장의 분위기를 바꿉니다.",
+"따뜻한 인사는 서로의 하루를 밝게 합니다.",
+"따뜻한 인사는 좋은 팀워크로 이어집니다.",
+"따뜻한 인사는 일의 완성도를 높여줍니다.",
+"따뜻한 인사는 기분 좋은 만남을 만듭니다.",
+"따뜻한 인사는 하루를 더 가치 있게 만듭니다.",
+"따뜻한 인사는 꾸준한 성장의 바탕이 됩니다.",
+"따뜻한 인사는 가장 오래 남는 서비스가 됩니다.",
+"따뜻한 인사는 서로에게 좋은 에너지가 됩니다.",
+"따뜻한 인사는 길채정의 좋은 인상을 만듭니다.",
+"밝은 표정은 좋은 하루의 시작이 됩니다.",
+"밝은 표정은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"밝은 표정은 우리 모두를 편안하게 합니다.",
+"밝은 표정은 좋은 기억을 만듭니다.",
+"밝은 표정은 동료에게 힘이 됩니다.",
+"밝은 표정은 손님에게 그대로 전해집니다.",
+"밝은 표정은 더 나은 서비스를 만듭니다.",
+"밝은 표정은 작지만 큰 차이를 만듭니다.",
+"밝은 표정은 오늘의 만족을 만듭니다.",
+"밝은 표정은 내일의 좋은 결과로 이어집니다.",
+"밝은 표정은 우리 매장의 분위기를 바꿉니다.",
+"밝은 표정은 서로의 하루를 밝게 합니다.",
+"밝은 표정은 좋은 팀워크로 이어집니다.",
+"밝은 표정은 일의 완성도를 높여줍니다.",
+"밝은 표정은 기분 좋은 만남을 만듭니다.",
+"밝은 표정은 하루를 더 가치 있게 만듭니다.",
+"밝은 표정은 꾸준한 성장의 바탕이 됩니다.",
+"밝은 표정은 가장 오래 남는 서비스가 됩니다.",
+"밝은 표정은 서로에게 좋은 에너지가 됩니다.",
+"밝은 표정은 길채정의 좋은 인상을 만듭니다.",
+"세심한 관심은 좋은 하루의 시작이 됩니다.",
+"세심한 관심은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"세심한 관심은 우리 모두를 편안하게 합니다.",
+"세심한 관심은 좋은 기억을 만듭니다.",
+"세심한 관심은 동료에게 힘이 됩니다.",
+"세심한 관심은 손님에게 그대로 전해집니다.",
+"세심한 관심은 더 나은 서비스를 만듭니다.",
+"세심한 관심은 작지만 큰 차이를 만듭니다.",
+"세심한 관심은 오늘의 만족을 만듭니다.",
+"세심한 관심은 내일의 좋은 결과로 이어집니다.",
+"세심한 관심은 우리 매장의 분위기를 바꿉니다.",
+"세심한 관심은 서로의 하루를 밝게 합니다.",
+"세심한 관심은 좋은 팀워크로 이어집니다.",
+"세심한 관심은 일의 완성도를 높여줍니다.",
+"세심한 관심은 기분 좋은 만남을 만듭니다.",
+"세심한 관심은 하루를 더 가치 있게 만듭니다.",
+"세심한 관심은 꾸준한 성장의 바탕이 됩니다.",
+"세심한 관심은 가장 오래 남는 서비스가 됩니다.",
+"세심한 관심은 서로에게 좋은 에너지가 됩니다.",
+"세심한 관심은 길채정의 좋은 인상을 만듭니다.",
+"서로 돕는 마음은 좋은 하루의 시작이 됩니다.",
+"서로 돕는 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"서로 돕는 마음은 우리 모두를 편안하게 합니다.",
+"서로 돕는 마음은 좋은 기억을 만듭니다.",
+"서로 돕는 마음은 동료에게 힘이 됩니다.",
+"서로 돕는 마음은 손님에게 그대로 전해집니다.",
+"서로 돕는 마음은 더 나은 서비스를 만듭니다.",
+"서로 돕는 마음은 작지만 큰 차이를 만듭니다.",
+"서로 돕는 마음은 오늘의 만족을 만듭니다.",
+"서로 돕는 마음은 내일의 좋은 결과로 이어집니다.",
+"서로 돕는 마음은 우리 매장의 분위기를 바꿉니다.",
+"서로 돕는 마음은 서로의 하루를 밝게 합니다.",
+"서로 돕는 마음은 좋은 팀워크로 이어집니다.",
+"서로 돕는 마음은 일의 완성도를 높여줍니다.",
+"서로 돕는 마음은 기분 좋은 만남을 만듭니다.",
+"서로 돕는 마음은 하루를 더 가치 있게 만듭니다.",
+"서로 돕는 마음은 꾸준한 성장의 바탕이 됩니다.",
+"서로 돕는 마음은 가장 오래 남는 서비스가 됩니다.",
+"서로 돕는 마음은 서로에게 좋은 에너지가 됩니다.",
+"서로 돕는 마음은 길채정의 좋은 인상을 만듭니다.",
+"손님을 생각하는 마음은 좋은 하루의 시작이 됩니다.",
+"손님을 생각하는 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"손님을 생각하는 마음은 우리 모두를 편안하게 합니다.",
+"손님을 생각하는 마음은 좋은 기억을 만듭니다.",
+"손님을 생각하는 마음은 동료에게 힘이 됩니다.",
+"손님을 생각하는 마음은 손님에게 그대로 전해집니다.",
+"손님을 생각하는 마음은 더 나은 서비스를 만듭니다.",
+"손님을 생각하는 마음은 작지만 큰 차이를 만듭니다.",
+"손님을 생각하는 마음은 오늘의 만족을 만듭니다.",
+"손님을 생각하는 마음은 내일의 좋은 결과로 이어집니다.",
+"손님을 생각하는 마음은 우리 매장의 분위기를 바꿉니다.",
+"손님을 생각하는 마음은 서로의 하루를 밝게 합니다.",
+"손님을 생각하는 마음은 좋은 팀워크로 이어집니다.",
+"손님을 생각하는 마음은 일의 완성도를 높여줍니다.",
+"손님을 생각하는 마음은 기분 좋은 만남을 만듭니다.",
+"손님을 생각하는 마음은 하루를 더 가치 있게 만듭니다.",
+"손님을 생각하는 마음은 꾸준한 성장의 바탕이 됩니다.",
+"손님을 생각하는 마음은 가장 오래 남는 서비스가 됩니다.",
+"손님을 생각하는 마음은 서로에게 좋은 에너지가 됩니다.",
+"손님을 생각하는 마음은 길채정의 좋은 인상을 만듭니다.",
+"기본을 지키는 태도는 좋은 하루의 시작이 됩니다.",
+"기본을 지키는 태도는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"기본을 지키는 태도는 우리 모두를 편안하게 합니다.",
+"기본을 지키는 태도는 좋은 기억을 만듭니다.",
+"기본을 지키는 태도는 동료에게 힘이 됩니다.",
+"기본을 지키는 태도는 손님에게 그대로 전해집니다.",
+"기본을 지키는 태도는 더 나은 서비스를 만듭니다.",
+"기본을 지키는 태도는 작지만 큰 차이를 만듭니다.",
+"기본을 지키는 태도는 오늘의 만족을 만듭니다.",
+"기본을 지키는 태도는 내일의 좋은 결과로 이어집니다.",
+"기본을 지키는 태도는 우리 매장의 분위기를 바꿉니다.",
+"기본을 지키는 태도는 서로의 하루를 밝게 합니다.",
+"기본을 지키는 태도는 좋은 팀워크로 이어집니다.",
+"기본을 지키는 태도는 일의 완성도를 높여줍니다.",
+"기본을 지키는 태도는 기분 좋은 만남을 만듭니다.",
+"기본을 지키는 태도는 하루를 더 가치 있게 만듭니다.",
+"기본을 지키는 태도는 꾸준한 성장의 바탕이 됩니다.",
+"기본을 지키는 태도는 가장 오래 남는 서비스가 됩니다.",
+"기본을 지키는 태도는 서로에게 좋은 에너지가 됩니다.",
+"기본을 지키는 태도는 길채정의 좋은 인상을 만듭니다.",
+"책임 있는 행동은 좋은 하루의 시작이 됩니다.",
+"책임 있는 행동은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"책임 있는 행동은 우리 모두를 편안하게 합니다.",
+"책임 있는 행동은 좋은 기억을 만듭니다.",
+"책임 있는 행동은 동료에게 힘이 됩니다.",
+"책임 있는 행동은 손님에게 그대로 전해집니다.",
+"책임 있는 행동은 더 나은 서비스를 만듭니다.",
+"책임 있는 행동은 작지만 큰 차이를 만듭니다.",
+"책임 있는 행동은 오늘의 만족을 만듭니다.",
+"책임 있는 행동은 내일의 좋은 결과로 이어집니다.",
+"책임 있는 행동은 우리 매장의 분위기를 바꿉니다.",
+"책임 있는 행동은 서로의 하루를 밝게 합니다.",
+"책임 있는 행동은 좋은 팀워크로 이어집니다.",
+"책임 있는 행동은 일의 완성도를 높여줍니다.",
+"책임 있는 행동은 기분 좋은 만남을 만듭니다.",
+"책임 있는 행동은 하루를 더 가치 있게 만듭니다.",
+"책임 있는 행동은 꾸준한 성장의 바탕이 됩니다.",
+"책임 있는 행동은 가장 오래 남는 서비스가 됩니다.",
+"책임 있는 행동은 서로에게 좋은 에너지가 됩니다.",
+"책임 있는 행동은 길채정의 좋은 인상을 만듭니다.",
+"정성스러운 마음은 좋은 하루의 시작이 됩니다.",
+"정성스러운 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"정성스러운 마음은 우리 모두를 편안하게 합니다.",
+"정성스러운 마음은 좋은 기억을 만듭니다.",
+"정성스러운 마음은 동료에게 힘이 됩니다.",
+"정성스러운 마음은 손님에게 그대로 전해집니다.",
+"정성스러운 마음은 더 나은 서비스를 만듭니다.",
+"정성스러운 마음은 작지만 큰 차이를 만듭니다.",
+"정성스러운 마음은 오늘의 만족을 만듭니다.",
+"정성스러운 마음은 내일의 좋은 결과로 이어집니다.",
+"정성스러운 마음은 우리 매장의 분위기를 바꿉니다.",
+"정성스러운 마음은 서로의 하루를 밝게 합니다.",
+"정성스러운 마음은 좋은 팀워크로 이어집니다.",
+"정성스러운 마음은 일의 완성도를 높여줍니다.",
+"정성스러운 마음은 기분 좋은 만남을 만듭니다.",
+"정성스러운 마음은 하루를 더 가치 있게 만듭니다.",
+"정성스러운 마음은 꾸준한 성장의 바탕이 됩니다.",
+"정성스러운 마음은 가장 오래 남는 서비스가 됩니다.",
+"정성스러운 마음은 서로에게 좋은 에너지가 됩니다.",
+"정성스러운 마음은 길채정의 좋은 인상을 만듭니다.",
+"함께하는 힘은 좋은 하루의 시작이 됩니다.",
+"함께하는 힘은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"함께하는 힘은 우리 모두를 편안하게 합니다.",
+"함께하는 힘은 좋은 기억을 만듭니다.",
+"함께하는 힘은 동료에게 힘이 됩니다.",
+"함께하는 힘은 손님에게 그대로 전해집니다.",
+"함께하는 힘은 더 나은 서비스를 만듭니다.",
+"함께하는 힘은 작지만 큰 차이를 만듭니다.",
+"함께하는 힘은 오늘의 만족을 만듭니다.",
+"함께하는 힘은 내일의 좋은 결과로 이어집니다.",
+"함께하는 힘은 우리 매장의 분위기를 바꿉니다.",
+"함께하는 힘은 서로의 하루를 밝게 합니다.",
+"함께하는 힘은 좋은 팀워크로 이어집니다.",
+"함께하는 힘은 일의 완성도를 높여줍니다.",
+"함께하는 힘은 기분 좋은 만남을 만듭니다.",
+"함께하는 힘은 하루를 더 가치 있게 만듭니다.",
+"함께하는 힘은 꾸준한 성장의 바탕이 됩니다.",
+"함께하는 힘은 가장 오래 남는 서비스가 됩니다.",
+"함께하는 힘은 서로에게 좋은 에너지가 됩니다.",
+"함께하는 힘은 길채정의 좋은 인상을 만듭니다.",
+"차분한 마음은 좋은 하루의 시작이 됩니다.",
+"차분한 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"차분한 마음은 우리 모두를 편안하게 합니다.",
+"차분한 마음은 좋은 기억을 만듭니다.",
+"차분한 마음은 동료에게 힘이 됩니다.",
+"차분한 마음은 손님에게 그대로 전해집니다.",
+"차분한 마음은 더 나은 서비스를 만듭니다.",
+"차분한 마음은 작지만 큰 차이를 만듭니다.",
+"차분한 마음은 오늘의 만족을 만듭니다.",
+"차분한 마음은 내일의 좋은 결과로 이어집니다.",
+"차분한 마음은 우리 매장의 분위기를 바꿉니다.",
+"차분한 마음은 서로의 하루를 밝게 합니다.",
+"차분한 마음은 좋은 팀워크로 이어집니다.",
+"차분한 마음은 일의 완성도를 높여줍니다.",
+"차분한 마음은 기분 좋은 만남을 만듭니다.",
+"차분한 마음은 하루를 더 가치 있게 만듭니다.",
+"차분한 마음은 꾸준한 성장의 바탕이 됩니다.",
+"차분한 마음은 가장 오래 남는 서비스가 됩니다.",
+"차분한 마음은 서로에게 좋은 에너지가 됩니다.",
+"차분한 마음은 길채정의 좋은 인상을 만듭니다.",
+"긍정적인 마음은 좋은 하루의 시작이 됩니다.",
+"긍정적인 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"긍정적인 마음은 우리 모두를 편안하게 합니다.",
+"긍정적인 마음은 좋은 기억을 만듭니다.",
+"긍정적인 마음은 동료에게 힘이 됩니다.",
+"긍정적인 마음은 손님에게 그대로 전해집니다.",
+"긍정적인 마음은 더 나은 서비스를 만듭니다.",
+"긍정적인 마음은 작지만 큰 차이를 만듭니다.",
+"긍정적인 마음은 오늘의 만족을 만듭니다.",
+"긍정적인 마음은 내일의 좋은 결과로 이어집니다.",
+"긍정적인 마음은 우리 매장의 분위기를 바꿉니다.",
+"긍정적인 마음은 서로의 하루를 밝게 합니다.",
+"긍정적인 마음은 좋은 팀워크로 이어집니다.",
+"긍정적인 마음은 일의 완성도를 높여줍니다.",
+"긍정적인 마음은 기분 좋은 만남을 만듭니다.",
+"긍정적인 마음은 하루를 더 가치 있게 만듭니다.",
+"긍정적인 마음은 꾸준한 성장의 바탕이 됩니다.",
+"긍정적인 마음은 가장 오래 남는 서비스가 됩니다.",
+"긍정적인 마음은 서로에게 좋은 에너지가 됩니다.",
+"긍정적인 마음은 길채정의 좋은 인상을 만듭니다.",
+"깔끔한 마무리는 좋은 하루의 시작이 됩니다.",
+"깔끔한 마무리는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"깔끔한 마무리는 우리 모두를 편안하게 합니다.",
+"깔끔한 마무리는 좋은 기억을 만듭니다.",
+"깔끔한 마무리는 동료에게 힘이 됩니다.",
+"깔끔한 마무리는 손님에게 그대로 전해집니다.",
+"깔끔한 마무리는 더 나은 서비스를 만듭니다.",
+"깔끔한 마무리는 작지만 큰 차이를 만듭니다.",
+"깔끔한 마무리는 오늘의 만족을 만듭니다.",
+"깔끔한 마무리는 내일의 좋은 결과로 이어집니다.",
+"깔끔한 마무리는 우리 매장의 분위기를 바꿉니다.",
+"깔끔한 마무리는 서로의 하루를 밝게 합니다.",
+"깔끔한 마무리는 좋은 팀워크로 이어집니다.",
+"깔끔한 마무리는 일의 완성도를 높여줍니다.",
+"깔끔한 마무리는 기분 좋은 만남을 만듭니다.",
+"깔끔한 마무리는 하루를 더 가치 있게 만듭니다.",
+"깔끔한 마무리는 꾸준한 성장의 바탕이 됩니다.",
+"깔끔한 마무리는 가장 오래 남는 서비스가 됩니다.",
+"깔끔한 마무리는 서로에게 좋은 에너지가 됩니다.",
+"깔끔한 마무리는 길채정의 좋은 인상을 만듭니다.",
+"서로를 존중하는 마음은 좋은 하루의 시작이 됩니다.",
+"서로를 존중하는 마음은 신뢰를 쌓는 가장 좋은 방법입니다.",
+"서로를 존중하는 마음은 우리 모두를 편안하게 합니다.",
+"서로를 존중하는 마음은 좋은 기억을 만듭니다.",
+"서로를 존중하는 마음은 동료에게 힘이 됩니다.",
+"서로를 존중하는 마음은 손님에게 그대로 전해집니다.",
+"서로를 존중하는 마음은 더 나은 서비스를 만듭니다.",
+"서로를 존중하는 마음은 작지만 큰 차이를 만듭니다.",
+"서로를 존중하는 마음은 오늘의 만족을 만듭니다.",
+"서로를 존중하는 마음은 내일의 좋은 결과로 이어집니다.",
+"서로를 존중하는 마음은 우리 매장의 분위기를 바꿉니다.",
+"서로를 존중하는 마음은 서로의 하루를 밝게 합니다.",
+"서로를 존중하는 마음은 좋은 팀워크로 이어집니다.",
+"서로를 존중하는 마음은 일의 완성도를 높여줍니다.",
+"서로를 존중하는 마음은 기분 좋은 만남을 만듭니다.",
+"서로를 존중하는 마음은 하루를 더 가치 있게 만듭니다.",
+"서로를 존중하는 마음은 꾸준한 성장의 바탕이 됩니다.",
+"서로를 존중하는 마음은 가장 오래 남는 서비스가 됩니다.",
+"서로를 존중하는 마음은 서로에게 좋은 에너지가 됩니다.",
+"서로를 존중하는 마음은 길채정의 좋은 인상을 만듭니다.",
+"좋은 팀워크는 좋은 하루의 시작이 됩니다.",
+"좋은 팀워크는 신뢰를 쌓는 가장 좋은 방법입니다.",
+"좋은 팀워크는 우리 모두를 편안하게 합니다.",
+"좋은 팀워크는 좋은 기억을 만듭니다.",
+"좋은 팀워크는 동료에게 힘이 됩니다."];
+function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function nowHHMM(){return new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit",hour12:false})}
+function dayOfYear(){const d=new Date(),s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000)}
+function formatPhone(v){let d=String(v||"").replace(/\D/g,"");if(d.length===10&&d.startsWith("10"))d="0"+d;if(d.length===11)return d.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3");return d}
+function resetDailyIfNeeded(){if(localStorage.getItem(DATE_KEY)!==todayKey()){[ACTION_KEY,IN_TIME_KEY,OUT_TIME_KEY].forEach(k=>localStorage.removeItem(k));localStorage.setItem(DATE_KEY,todayKey())}}
+function setStatus(t,k=""){const e=document.getElementById("msg");e.textContent=t;e.className="status"+(k?" "+k:"")}
+function updateClock(){const d=new Date(),days=["일","월","화","수","목","금","토"];document.getElementById("clock").textContent=`${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]}) · ${d.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})}`}
+function updateBtn(){resetDailyIfNeeded();const last=localStorage.getItem(ACTION_KEY),i=document.getElementById("inBtn"),o=document.getElementById("outBtn"),it=localStorage.getItem(IN_TIME_KEY)||"",ot=localStorage.getItem(OUT_TIME_KEY)||"";document.getElementById("inTime").textContent=it||"--:--";document.getElementById("outTime").textContent=ot||"--:--";i.textContent="출근";o.textContent="퇴근";if(!last){i.disabled=false;o.disabled=true;setStatus("아직 출근 전입니다.")}else if(last==="출근"){i.disabled=true;o.disabled=false;setStatus("✓ "+it+" 출근 완료","ok")}else{i.disabled=true;o.disabled=true;setStatus("✓ "+ot+" 퇴근 완료","ok")}}
+function showMain(u){document.getElementById("register").style.display="none";document.getElementById("main").style.display="block";document.getElementById("userName").textContent=u.name;document.getElementById("userPhone").textContent="· "+formatPhone(u.phone);document.getElementById("quoteText").textContent=DAILY_QUOTES[(dayOfYear()-1)%365];updateClock();setInterval(updateClock,30000);updateBtn()}
+window.onload=()=>{resetDailyIfNeeded();document.getElementById("phone").oninput=function(){this.value=formatPhone(this.value)};const s=localStorage.getItem(KEY);if(s)showMain(JSON.parse(s))}
+async function register(){const name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),m=document.getElementById("regMsg");m.style.display="block";if(!name||!phone){m.textContent="이름과 전화번호를 입력하세요.";return}m.textContent="직원 등록 중...";try{await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"register",name,phone,userAgent:navigator.userAgent})});const u={name,phone:phone.replace(/\D/g,"")};localStorage.setItem(KEY,JSON.stringify(u));showMain(u)}catch(e){m.textContent="직원 등록 중 오류가 발생했습니다."}}
+function getLocation(){return new Promise(r=>{if(!navigator.geolocation)return r({latitude:"",longitude:"",distance:""});navigator.geolocation.getCurrentPosition(p=>{const lat=p.coords.latitude,lng=p.coords.longitude;r({latitude:lat,longitude:lng,distance:Math.round(calculateDistanceMeters(lat,lng,STORE_LAT,STORE_LNG))+"m"})},()=>r({latitude:"",longitude:"",distance:"위치권한없음"}),{enableHighAccuracy:false,timeout:5000,maximumAge:60000})})}
+async function send(type){const u=JSON.parse(localStorage.getItem(KEY)||"null");if(!u)return setStatus("직원 정보를 다시 등록해주세요.","error");const i=document.getElementById("inBtn"),o=document.getElementById("outBtn"),t=nowHHMM();localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,t);document.getElementById(type==="출근"?"inTime":"outTime").textContent=t;(type==="출근"?i:o).textContent=type+" 저장중...";i.disabled=o.disabled=true;setStatus(type+" "+t+" · 저장 중...");const loc=await getLocation();try{const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:u.name,phone:u.phone,type,store:"압구정 길채정",timestamp:new Date().toISOString(),latitude:loc.latitude,longitude:loc.longitude,distance:loc.distance,userAgent:navigator.userAgent})});const result=await res.json();if(!result||result.success!==true)throw new Error();let st=t,m=String(result.time||"").match(/(\d{2}):(\d{2})/);if(m)st=m[1]+":"+m[2];localStorage.setItem(ACTION_KEY,type);localStorage.setItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY,st);localStorage.setItem(DATE_KEY,todayKey());updateBtn()}catch(e){localStorage.removeItem(type==="출근"?IN_TIME_KEY:OUT_TIME_KEY);updateBtn();setStatus("저장 실패 · 다시 눌러주세요.","error")}}
+function calculateDistanceMeters(a,b,c,d){const R=6371000,x=toRad(c-a),y=toRad(d-b),z=Math.sin(x/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(z),Math.sqrt(1-z))}
+function toRad(v){return v*Math.PI/180}
+function reset(){if(!confirm("직원 정보를 다시 등록하시겠습니까?"))return;[KEY,ACTION_KEY,DATE_KEY,IN_TIME_KEY,OUT_TIME_KEY].forEach(k=>localStorage.removeItem(k));location.reload()}
+</script></body></html>
