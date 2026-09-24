@@ -6,7 +6,7 @@
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:"Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;background:#f7f3eb;color:#201b18}
 .container{max-width:430px;margin:auto;padding:18px 14px}.card{background:#fff;border-radius:26px;padding:26px 22px 22px;box-shadow:0 12px 32px rgba(61,42,27,.10)}
-.brand{text-align:center;font-size:29px;font-weight:900;color:#5a3018}.store{text-align:center;color:#7d746e;font-size:14px;font-weight:800;margin-top:4px}
+.company-logo{display:block;width:190px;max-width:62%;height:auto;margin:0 auto 14px}.brand{text-align:center;font-size:29px;font-weight:900;color:#5a3018}.store{text-align:center;color:#7d746e;font-size:14px;font-weight:800;margin-top:4px}
 .title{text-align:center;font-size:27px;font-weight:900;margin-top:24px}.greeting{text-align:center;font-size:14px;font-weight:800;color:#43524a;margin-top:8px}.clock{text-align:center;font-size:12px;color:#8d9891;margin-top:7px}
 .quote{margin-top:17px;padding:12px 14px;border:1px solid #e8dece;background:#fbfaf6;border-radius:16px;text-align:center}.quote-label{font-size:10px;font-weight:900;color:#8a633f;margin-bottom:5px}.quote-text{font-size:13px;line-height:1.45;font-weight:800;color:#3d3a36}
 .employee{margin-top:14px;padding:13px 14px;background:#faf7f1;border:1px solid #eadfce;border-radius:16px;text-align:center;font-weight:900}.employee .name{font-size:19px}.employee .phone{font-size:15px;margin-left:7px}
@@ -17,9 +17,9 @@ button{width:100%;height:64px;border:0;border-radius:17px;margin-top:10px;font-s
 .form-title{text-align:center;font-size:27px;font-weight:900;margin-top:22px}.form-desc{text-align:center;color:#777;font-size:14px;line-height:1.55;margin:8px 0 18px}label{display:block;font-size:14px;font-weight:900;margin:11px 0 6px}
 input{width:100%;height:54px;border:1px solid #ddd;border-radius:14px;padding:0 15px;font-size:18px;letter-spacing:0!important}
 </style></head><body><div class="container">
-<div id="register" class="card"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="form-title">직원 등록</div><div class="form-desc">최초 1회만 등록하면 됩니다.<br>이후에는 자동으로 출퇴근 화면이 열립니다.</div>
+<div id="register" class="card"><img class="company-logo" src="images/thebigkorea-logo.png" alt="더큰코리아"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="form-title">직원 등록</div><div class="form-desc">최초 1회만 등록하면 됩니다.<br>이후에는 자동으로 출퇴근 화면이 열립니다.</div>
 <label>직원명</label><input id="name" placeholder="이름"><label>전화번호</label><input id="phone" type="tel" inputmode="numeric" maxlength="13" placeholder="010-1234-5678"><button class="btn-main" onclick="register()">직원 등록</button><div id="regMsg" class="status" style="display:none"></div></div>
-<div id="main" class="card" style="display:none"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="title">출퇴근 체크</div><div class="greeting">오늘도 좋은 하루 되세요.</div><div id="clock" class="clock"></div>
+<div id="main" class="card" style="display:none"><img class="company-logo" src="images/thebigkorea-logo.png" alt="더큰코리아"><div class="brand">길채정</div><div class="store">압구정 갤러리아 · 출퇴근 관리</div><div class="title">출퇴근 체크</div><div class="greeting">오늘도 좋은 하루 되세요.</div><div id="clock" class="clock"></div>
 <div class="quote"><div class="quote-label">오늘의 한마디</div><div id="quoteText" class="quote-text"></div></div>
 <div class="employee"><span id="userName" class="name"></span><span id="userPhone" class="phone"></span></div>
 <div class="times"><div class="time-card"><span>출근</span><strong id="inTime">--:--</strong></div><div class="time-card"><span>퇴근</span><strong id="outTime">--:--</strong></div></div>
